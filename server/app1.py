@@ -7,8 +7,19 @@ import numpy as np
 from io import BytesIO
 import dlib
 from imutils import face_utils
+from flask_mail import Mail, Message
+
 
 app = Flask(__name__)
+
+app.config['MAIL_SERVER'] = 'smtp.fastmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'meetsingh_25@fastmail.com'
+app.config['MAIL_PASSWORD'] = 'yfy4dcjtrwtbhp8v'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
 CORS(app)
 
 cap = cv2.VideoCapture(0)
@@ -86,6 +97,33 @@ def process_frame():
     }
 
     return jsonify(response)
+
+@app.route("/send_mail",methods=["POST"])
+def send_mail():
+    try:
+        name=request.json["name"]
+        email1=request.json["email1"]
+        email2=request.json["email2"]
+        recipients=[email1, email2]
+        print(f"Recipients: {recipients}")
+
+        subject=f"Emergency!! your family member {name} is in trouble"
+        message='''
+            Dear [Family Member’s Name],
+            I am writing to inform you that your family member has been detected as drowsy while driving and is currently unresponsive. We have sent this email to you as an emergency measure to ensure that you are aware of the situation and can take appropriate action.
+            The location of the vehicle has been tracked and is currently at [location]. We urge you to immediately come to the location or try contacting [name] on their phone number [phone number] to ensure their safety.
+            Please treat this as an urgent matter and take immediate action.
+            Sincerely,
+            [Your Name]
+        '''
+        msg = Message(subject=subject, sender='meetsingh_25@fastmail.com', recipients=recipients)
+        msg.body = message
+        mail.send(msg)
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return "Message sent!"
 
 if __name__ == '__main__':
     app.run(debug=True)
