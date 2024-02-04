@@ -2,6 +2,7 @@ import './App.css';
 import CustomCam from './Components/CustomCam';
 import Login from './Components/Login';
 import Registration from './Components/Registration';
+import Acknowledgement from './Components/Acknowledgement';
 import {useState} from "react"
 import {
   BrowserRouter,Route,Routes
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Login curUser={curUser} setCurUser={setCurUser}/>} />
         <Route path="/registration" element={<Registration curUser={curUser} setCurUser={setCurUser}/>} />
         <Route path="/webcam" element={<CustomCam curUser={curUser} setCurUser={setCurUser}/>} />
+        <Route path="/acknowledgement" element={<Acknowledgement curUser={curUser} setCurUser={setCurUser}/>} />
 
       </Routes>
     </BrowserRouter>

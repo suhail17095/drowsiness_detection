@@ -7,18 +7,8 @@ import numpy as np
 from io import BytesIO
 import dlib
 from imutils import face_utils
-from flask_mail import Mail, Message
-
 
 app = Flask(__name__)
-
-app.config['MAIL_SERVER'] = 'smtp.fastmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'meetsingh_25@fastmail.com'
-app.config['MAIL_PASSWORD'] = 'yfy4dcjtrwtbhp8v'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
 
 CORS(app)
 
@@ -98,8 +88,6 @@ def process_frame():
 
     return jsonify(response)
 
-@app.route("/send_mail",methods=["POST"])
-def send_mail():
     try:
         name=request.json["name"]
         email1=request.json["email1"]

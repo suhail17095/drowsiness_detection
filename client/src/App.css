@@ -206,3 +206,21 @@ textarea{
   align-items: center;
   color: "#5CDB95";
 }
+#parent {
+  display: flex;
+  height: 100vh; /* Adjust as needed */
+  justify-content: center;
+  align-items: center;
+}
+
+.outer-div-ack{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner-div-ack{
+  width: 50%;
+  padding: 20px;
+}
