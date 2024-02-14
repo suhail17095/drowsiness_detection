@@ -34,7 +34,6 @@ function Login(props) {
             }
             else{
                 
-                props.setCurUser(email);
                 Navigate("/webcam");
         }
         })

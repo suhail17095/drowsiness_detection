@@ -9,13 +9,14 @@ import {
 } from "react-router-dom";
 function App() {
   const [curUser,setCurUser]=useState(null);
+  const [curName,setCurName]=useState(null);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login curUser={curUser} setCurUser={setCurUser}/>} />
-        <Route path="/registration" element={<Registration curUser={curUser} setCurUser={setCurUser}/>} />
-        <Route path="/webcam" element={<CustomCam curUser={curUser} setCurUser={setCurUser}/>} />
-        <Route path="/acknowledgement" element={<Acknowledgement curUser={curUser} setCurUser={setCurUser}/>} />
+        <Route path="/" element={<Login curUser={curUser} setCurUser={setCurUser} curName={curName} setCurName={setCurName}/>} />
+        <Route path="/registration" element={<Registration curUser={curUser} setCurUser={setCurUser} curName={curName} setCurName={setCurName}/>} />
+        <Route path="/webcam" element={<CustomCam curUser={curUser} setCurUser={setCurUser} curName={curName} setCurName={setCurName}/>} />
+        <Route path="/acknowledgement" element={<Acknowledgement curUser={curUser} setCurUser={setCurUser} curName={curName} setCurName={setCurName}/>} />
 
       </Routes>
     </BrowserRouter>

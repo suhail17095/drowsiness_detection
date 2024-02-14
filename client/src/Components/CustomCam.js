@@ -104,7 +104,7 @@ const CustomCam = (props) => {
             });
             setActive(0);
           }
-          else {
+          else if(cur_status == "Active"){
             setActive(preActive => {
               stop();
               removeAlert();
@@ -188,7 +188,7 @@ const CustomCam = (props) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#282c34' }}>
 
-      <h1 style={{ color: '#61dafb' }}>Welcome Suhail Shaikh</h1>
+      <h1 style={{ color: '#61dafb' }}>Welcome {props.curUser}</h1>
       {alert == true &&
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
           <strong>Attention!!</strong> We are sending alert mail to your family. Press the cross button to dissmiss it.

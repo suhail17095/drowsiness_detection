@@ -46,11 +46,14 @@ def process_frame():
     frame=np.array(frame)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = detector(gray)
+    flag=False
     status = ""
     color = (0, 0, 0)    
     if len(faces) == 0:
-            status="Drowsy"
+            status="Align the Face With Camera"
+            flag=True
     for face in faces:  
+            
             x1 = face.left()
             y1 = face.top()
             x2 = face.right()
@@ -74,6 +77,7 @@ def process_frame():
                     status = "Active"
                     color = (0, 255, 0)
 
+    
     cv2.putText(frame, status, (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert the image from BGR to RGB
     is_success, im_buf_arr = cv2.imencode(".jpg", frame)
@@ -81,6 +85,8 @@ def process_frame():
     img_base64 = base64.b64encode(byte_im).decode()  # Convert the image to base64
 
     # Prepare the JSON response
+    if flag:
+        status="Drowsy"
     response = {
         'image': img_base64,
         'status': status
