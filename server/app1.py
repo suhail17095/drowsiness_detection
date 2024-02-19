@@ -89,7 +89,8 @@ def process_frame():
         status="Drowsy"
     response = {
         'image': img_base64,
-        'status': status
+        'status': status,
+        "flag":flag
     }
 
     return jsonify(response)

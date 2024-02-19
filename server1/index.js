@@ -86,7 +86,7 @@ app.post("/get_details",async(req,res)=>
     const email = req.body.email;
     const temp = await check(email);
     const user = await Users.findOne({ email: email });
-    if(user == null)
+    if(!user)
     {
         res.status(200).send({ flag: "false", msg: "User Not found" });
     }

@@ -33,7 +33,7 @@ function Login(props) {
                 alert(res.data.msg);
             }
             else{
-                
+                props.setCurUser(user_id);
                 Navigate("/webcam");
         }
         })

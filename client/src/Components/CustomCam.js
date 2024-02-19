@@ -2,8 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 import sound from "./Sound/alarm.wav"
+import notify from "./Sound/notify.wav"
 import useSound from 'use-sound';
 import { useNavigate } from 'react-router-dom';
+import Alert from "./Alert"
 import Acknowledgement from './Acknowledgement';
 const CustomCam = (props) => {
   const Navigate=useNavigate()
@@ -14,12 +16,15 @@ const CustomCam = (props) => {
   const [drowsy, setDrowsy] = useState(null);
   const [active, setActive] = useState(null);
   const [alert, setAlert] = useState(false);
-  const [playSound, { stop }] = useSound(sound, { loop: true });
+  const [notifyAlert, setNotifyAlert] = useState(false);
+  const [playSound, {stop}] = useSound(sound, { loop: true });
+  const [playNotify, {stop:stopNotify}] = useSound(notify);
   const [cameraPermission, setCameraPermission] = useState(false)
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
   });
+  const [align,setAlign]=useState(0);
   const timeoutId = useRef(null);
 
   function handleCloseAlert() {
@@ -30,7 +35,18 @@ const CustomCam = (props) => {
       timeoutId.current = null;
     }
   };
-  async function sendMail(status)
+
+  function handleNotifyAlert()
+  {
+    setNotifyAlert(false);
+    stopNotify();
+    setAlign(align-50);
+  }
+  useEffect(()=>
+  {
+    stop();
+  },[stop])
+ async function sendMail(status)
   {
     console.log("Inside sendMail");
     console.log("Curr user "+props.curUser);
@@ -38,11 +54,13 @@ const CustomCam = (props) => {
     try{
     const res=await axios.post("http://localhost:3002/get_details",{email:email});
     console.log("First messsage"+res.data);
+   
     try{
       const name=res.data.name;
       const email1=res.data.email1;
       const email2=res.data.email2;
       const phone=res.data.phone;
+      console.log("email1 "+email1 +" email2 "+email2);
       const currLocation= await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -82,7 +100,20 @@ const CustomCam = (props) => {
           response = await axios.post('http://localhost:5000/process_frame', { frame: imageSrc });
           const url = `data:image/jpeg;base64,${response.data.image}`;
           const cur_status = response.data.status;
-          // console.log(cur_status)  
+          const flag=response.data.flag;
+
+          if(flag)
+          {
+            setAlign(prevAlign=>
+              {
+                if(prevAlign>=200)
+                {
+                  playNotify();
+                  setNotifyAlert(true);
+                }
+                return prevAlign +1;
+              })
+          }
           if (cur_status == "Drowsy") {
             setDrowsy(prevDrowsy => {
               if (prevDrowsy + 1 >= 30) {
@@ -166,6 +197,7 @@ const CustomCam = (props) => {
 
 
   useEffect(() => {
+    // stop();
     if (cameraPermission == false) {
       getLocation();
       navigator.mediaDevices.getUserMedia({ video: true })
@@ -175,6 +207,7 @@ const CustomCam = (props) => {
           let tracks = stream.getTracks();
           tracks.forEach(function (track) {
             track.stop();
+
           });
         })
         .catch(function (err) {
@@ -196,6 +229,14 @@ const CustomCam = (props) => {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>}
+        { notifyAlert == true && 
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Attention!!</strong> It look like you are repeatedly moving away from camera. Please be in front and drive safe.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" onClick={handleNotifyAlert}>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        }
       {cameraPermission === true && (
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#282c34', padding: '20px', borderRadius: '10px' }}>
           <Webcam
@@ -210,7 +251,7 @@ const CustomCam = (props) => {
       {cameraPermission === null && <p>Checking camera permission...</p>}
       {<p>longitute: {location.longitude}</p>}
       {<p>latitude: {location.latitude}</p>}
-      <h3 style={{ color: '#61dafb' }}>{"Drowsy: " + drowsy + " Active " + active}</h3>
+      <h3 style={{ color: '#61dafb' }}>{"Drowsy: " + drowsy + " Active " + active +" Alignment "+align}</h3>
 
     </div>
   );
