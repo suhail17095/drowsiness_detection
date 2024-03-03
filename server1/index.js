@@ -1,9 +1,11 @@
+const fetch= require("node-fetch")
 const express = require("express")
 const app = express();
 const cors = require("cors")
 const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser")
 const { Users } = require("./models/UserSchema")
+
 
 require("./db/conn");
 app.use(express.json())
@@ -65,7 +67,7 @@ app.post("/registeration", async (req, res) => {
     }
     else {
 
-        const user = new Users({ email: email, password: password, name: name, phone: phone, email1: email1, email2: email2 });
+        const user = new Users({ email: email, password: password, name: name, phone: phone, email1: email1, email2: email2});
         try {
             await user.save();
             res.status(200).send({ flag: "true", msg: "Registration succesfull" });
@@ -102,6 +104,7 @@ app.post("/send_email", (req, res) => {
     let subject="";
     console.log(req.body);
     let text="";
+    let flag=true;
     if(status == "Alert")
     {
         const latitude=req.body.latitude;
@@ -117,6 +120,14 @@ app.post("/send_email", (req, res) => {
         Sincerely,
         [Drowsiness detection team]`
     }
+    else if(status == "Telegram")
+    {
+        const link="https://t.me/drowsey_detection"
+        subject=`Get Updated about your family members safety`
+        text=`Join this telgram channel to get updated about your family member ${name} 
+        Joining Link: ${link}`;
+        flag=false;
+    }
     else{
         subject = `Relax!! your family member ${name} is now safe`
         text=`
@@ -128,6 +139,7 @@ app.post("/send_email", (req, res) => {
     console.log("Inside send mail");
     console.log(email1+" "+email2);
     console.log("Helloworld")
+
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -142,7 +154,9 @@ app.post("/send_email", (req, res) => {
         subject:subject, // Subject line
         text: text, // plain text body
     };
-
+    if(flag == true){
+    sendTelegramMessage(`This is a message for ${email1} and ${email2}\n`+text)
+    }
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);
@@ -158,7 +172,32 @@ app.post("/send_email", (req, res) => {
 
 
 
-
+async function sendTelegramMessage(message) {
+    try {
+        const token="7137092591:AAHJx53K_VlMM1BONRiHZv6FqT_8_-Ginz0";
+        const channel="-1002059374534"
+        const request = await fetch(
+        `https://api.telegram.org/bot${token}/sendMessage?chat_id=${channel}&text=${message}`,
+        {
+          method: "GET",
+          redirect: "follow",
+        }
+      );
+  
+    
+      const response = await request.json();
+      console.log(response);
+   
+      return response;
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+async function sendMail(){
+    sendTelegramMessage(
+        "Hey! my name is suraj patel. How can i help you sir !!"
+      );
+}
 app.listen(3002, () => {
     console.log("app is listening at port 3002");
 })

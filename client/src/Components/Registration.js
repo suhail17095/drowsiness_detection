@@ -28,13 +28,29 @@ function Registration() {
                 alert(res.data.msg);
             }
             else{
+
            alert(res.data.msg);
+           sendMail("Telegram")
            Navigate("/");
             }
             
         })
     }
  
+    async function sendMail(status) {
+        const name=user.name;
+        const email1=user.email1;
+        const email2=user.email2;
+        console.log("name "+name+" email1 "+email1+" email2 "+email2);
+        try{
+            const res1 = await axios.post("http://localhost:3002/send_email", { name: name, email1: email1, email2: email2,status: status });
+            
+        }
+        catch(err){
+            console.log(err);
+        }
+
+    }
     return (            
             <div className="container register-container shadow bg-white-rounded">
                 <h1 className='mb-3'>Sign up</h1>
@@ -77,6 +93,8 @@ function Registration() {
                                     </div>
                                     <input type="text" className="form-control register-input" aria-label="Small" aria-describedby="inputGroup-sizing-sm " placeholder='Family Email-2' name='email2' value={user.email2} onChange={handleChange}/>
                                 </div>
+                              
+                               
                                 <div className="input-group input-group-sm mb-3">
                                     <div className="input-group-prepend">
         

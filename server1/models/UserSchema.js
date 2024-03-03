@@ -21,7 +21,6 @@ const userSchema=mongoose.Schema({
         type:String,
         require:true
     }
-    
 })
 
 const Users=mongoose.model("Users",userSchema)

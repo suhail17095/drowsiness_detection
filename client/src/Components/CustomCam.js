@@ -40,7 +40,7 @@ const CustomCam = (props) => {
   {
     setNotifyAlert(false);
     stopNotify();
-    setAlign(align-50);
+    setAlign(120);
   }
   useEffect(()=>
   {
@@ -247,10 +247,10 @@ const CustomCam = (props) => {
           {image && <img src={image} alt="" ref={iRef} style={{ borderRadius: '10px', boxShadow: '0px 0px 10px 5px rgba(0,0,0,0.1)' }} />}
         </div>
       )}
-      {cameraPermission === false && <p>Camera permission is not granted</p>}
+      {/* {cameraPermission === false && <p>Camera permission is not granted</p>}
       {cameraPermission === null && <p>Checking camera permission...</p>}
       {<p>longitute: {location.longitude}</p>}
-      {<p>latitude: {location.latitude}</p>}
+      {<p>latitude: {location.latitude}</p>} */}
       <h3 style={{ color: '#61dafb' }}>{"Drowsy: " + drowsy + " Active " + active +" Alignment "+align}</h3>
 
     </div>
