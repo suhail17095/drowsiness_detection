@@ -68,7 +68,7 @@ function Registration() {
                                 <div className="input-group input-group-sm mb-3">
                                     <div className="input-group-prepend">
         
-                                        <i class="fa-solid fa-envelope input-group-text register-icon" id="inputGroup-sizing-sm"></i>
+                                        <i className="fa-solid fa-envelope input-group-text register-icon" id="inputGroup-sizing-sm"></i>
                                     </div>
                                     <input type="email" className="form-control register-input" aria-label="Small" aria-describedby="inputGroup-sizing-sm " placeholder='Email' name='email' value={user.email} onChange={handleChange}/>
                                 </div>
